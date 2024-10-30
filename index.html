@@ -1,0 +1,207 @@
+import React, { useState, useEffect } from 'react';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Heart, MapPin, Calendar, Star, Image, MessageSquare, Map } from 'lucide-react';
+
+const FoodAdventureTracker = () => {
+  const [locations, setLocations] = useState([]);
+  const [filter, setFilter] = useState('all');
+  const [selectedLocation, setSelectedLocation] = useState(null);
+
+  useEffect(() => {
+    // Initialize with all food locations from the list
+    setLocations([
+      { id: 1, name: "1LB Sandwich Mezclita", location: "Florida", restaurant: "", visited: false, rating: 0, date: "", notes: "", photos: [] },
+      { id: 2, name: "El Bebesito Quesito", location: "Bayamon", restaurant: "", visited: false, rating: 0, date: "", notes: "", photos: [] },
+      { id: 3, name: "Cajota de Palitos", location: "Arecibo", restaurant: "", visited: false, rating: 0, date: "", notes: "", photos: [] },
+      { id: 4, name: "Limbers en Canasta", location: "Ceiba", restaurant: "", visited: false, rating: 0, date: "", notes: "", photos: [] },
+      { id: 5, name: "Mofongo Pa Mellao", location: "Bayamon", restaurant: "", visited: false, rating: 0, date: "", notes: "", photos: [] },
+      { id: 6, name: "Pincho Box XXL", location: "Arecibo", restaurant: "", visited: false, rating: 0, date: "", notes: "", photos: [] },
+      { id: 7, name: "Rellenos Volcanicos", location: "San Sebastian", restaurant: "", visited: false, rating: 0, date: "", notes: "", photos: [] },
+      { id: 8, name: "Mofongo Chino Bowl", location: "Toa Baja", restaurant: "", visited: false, rating: 0, date: "", notes: "", photos: [] },
+      { id: 9, name: "Egg Roll Gigante", location: "Cataño", restaurant: "", visited: false, rating: 0, date: "", notes: "", photos: [] },
+      { id: 10, name: "Bolas de Carne Frita", location: "Dorado", restaurant: "", visited: false, rating: 0, date: "", notes: "", photos: [] },
+      { id: 11, name: "Empanadilla Gigante", location: "Guayanilla", restaurant: "Upa Upa Bar & Grill", visited: false, rating: 0, date: "", notes: "", photos: [] },
+      { id: 12, name: "Bandeja Las de Cayey", location: "Coamo", restaurant: "Rest Patria", visited: false, rating: 0, date: "", notes: "", photos: [] },
+      { id: 13, name: "Rellenos Gigantes", location: "Cataño", restaurant: "El Punto Sabroso", visited: false, rating: 0, date: "", notes: "", photos: [] },
+      { id: 14, name: "Sandwick 7 Carnes", location: "Ponce", restaurant: "Rest El Agueybana", visited: false, rating: 0, date: "", notes: "", photos: [] },
+      { id: 15, name: "Langosta Mampostea", location: "Naguabo", restaurant: "Super Benjys Cuisine", visited: false, rating: 0, date: "", notes: "", photos: [] },
+      // Add all other locations from the list...
+    ]);
+  }, []);
+
+  const toggleVisited = (id) => {
+    setLocations(locations.map(loc => 
+      loc.id === id ? {...loc, visited: !loc.visited} : loc
+    ));
+  };
+
+  const updateRating = (id, rating) => {
+    setLocations(locations.map(loc => 
+      loc.id === id ? {...loc, rating} : loc
+    ));
+  };
+
+  const updateNotes = (id, notes) => {
+    setLocations(locations.map(loc => 
+      loc.id === id ? {...loc, notes} : loc
+    ));
+  };
+
+  const updateDate = (id, date) => {
+    setLocations(locations.map(loc => 
+      loc.id === id ? {...loc, date} : loc
+    ));
+  };
+
+  const addPhoto = (id, photoUrl) => {
+    setLocations(locations.map(loc => 
+      loc.id === id ? {...loc, photos: [...loc.photos, photoUrl]} : loc
+    ));
+  };
+
+  const handlePhotoUpload = (id) => {
+    // Using a placeholder image since we can't actually upload
+    const placeholderUrl = "/api/placeholder/400/300";
+    addPhoto(id, placeholderUrl);
+  };
+
+  const openMap = (location) => {
+    setSelectedLocation(location);
+    // In a real implementation, this would open a modal with an embedded map
+    window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`, '_blank');
+  };
+
+  return (
+    <div className="max-w-6xl mx-auto p-4">
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold text-center">
+            Puerto Rico Food Adventure Tracker
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex justify-between items-center mb-4">
+            <div className="space-x-2">
+              <button
+                className={`px-3 py-1 rounded ${filter === 'all' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                onClick={() => setFilter('all')}
+              >
+                All
+              </button>
+              <button
+                className={`px-3 py-1 rounded ${filter === 'visited' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                onClick={() => setFilter('visited')}
+              >
+                Visited
+              </button>
+              <button
+                className={`px-3 py-1 rounded ${filter === 'planned' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                onClick={() => setFilter('planned')}
+              >
+                To Visit
+              </button>
+            </div>
+            <div className="text-sm">
+              Progress: {locations.filter(l => l.visited).length} / {locations.length} visited
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {locations
+          .filter(loc => {
+            if (filter === 'visited') return loc.visited;
+            if (filter === 'planned') return !loc.visited;
+            return true;
+          })
+          .map(location => (
+            <Card key={location.id} className={`${location.visited ? 'border-green-500' : 'border-gray-200'} border-2`}>
+              <CardContent className="p-4">
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="font-bold text-lg">{location.name}</h3>
+                  <button
+                    onClick={() => toggleVisited(location.id)}
+                    className={`p-2 rounded-full ${location.visited ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-400'}`}
+                  >
+                    <Heart className={`h-5 w-5 ${location.visited ? 'fill-current' : ''}`} />
+                  </button>
+                </div>
+                
+                <div className="flex items-center justify-between text-gray-600 mb-2">
+                  <div className="flex items-center">
+                    <MapPin className="h-4 w-4 mr-1" />
+                    <span className="text-sm">{location.location}</span>
+                  </div>
+                  <button 
+                    onClick={() => openMap(location.location)}
+                    className="p-1 hover:bg-gray-100 rounded"
+                  >
+                    <Map className="h-4 w-4" />
+                  </button>
+                </div>
+
+                {location.restaurant && (
+                  <div className="text-sm text-gray-600 mb-2">
+                    {location.restaurant}
+                  </div>
+                )}
+
+                {location.visited && (
+                  <>
+                    <div className="flex items-center mb-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                          key={star}
+                          className={`h-5 w-5 cursor-pointer ${
+                            location.rating >= star ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                          }`}
+                          onClick={() => updateRating(location.id, star)}
+                        />
+                      ))}
+                    </div>
+
+                    <div className="mb-2">
+                      <input
+                        type="date"
+                        className="w-full p-2 border rounded-md text-sm"
+                        value={location.date}
+                        onChange={(e) => updateDate(location.id, e.target.value)}
+                      />
+                    </div>
+
+                    <textarea
+                      className="w-full p-2 border rounded-md text-sm mb-2"
+                      placeholder="Add your notes about this place..."
+                      value={location.notes}
+                      onChange={(e) => updateNotes(location.id, e.target.value)}
+                    />
+
+                    <div className="space-y-2">
+                      {location.photos.map((photo, index) => (
+                        <img
+                          key={index}
+                          src={photo}
+                          alt={`Photo ${index + 1} of ${location.name}`}
+                          className="w-full h-48 object-cover rounded-md"
+                        />
+                      ))}
+                      <button
+                        onClick={() => handlePhotoUpload(location.id)}
+                        className="w-full p-2 border-2 border-dashed rounded-md text-gray-500 flex items-center justify-center"
+                      >
+                        <Image className="h-5 w-5 mr-2" />
+                        Add Photo
+                      </button>
+                    </div>
+                  </>
+                )}
+              </CardContent>
+            </Card>
+          ))}
+      </div>
+    </div>
+  );
+};
+
+export default FoodAdventureTracker;
