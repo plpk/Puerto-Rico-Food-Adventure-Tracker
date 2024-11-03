@@ -5,10 +5,7 @@ export default defineConfig({
   plugins: [react()],
   base: '/Puerto-Rico-Food-Adventure-Tracker/',
   build: {
-    rollupOptions: {
-      output: {
-        manualChunks: undefined
-      }
-    }
+    outDir: '.',
+    emptyOutDir: false
   }
 })
