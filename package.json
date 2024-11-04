@@ -3,7 +3,6 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "homepage": "https://plpk.github.io/Puerto-Rico-Food-Adventure-Tracker",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -12,15 +11,19 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "lucide-react": "^0.263.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "lucide-react": "^0.263.1"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.5.7",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@vitejs/plugin-react": "^4.0.3",
+    "autoprefixer": "^10.4.17",
     "gh-pages": "^6.0.0",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
     "vite": "^4.4.5"
   }
 }
